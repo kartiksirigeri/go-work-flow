@@ -3,58 +3,58 @@
 <body>
 <b>GO-WORK-FLOW</b>
 <span>
-Parallelism is about doing many things at once. While this sounds similar to concurrency but they are different. 
-GO provides Goroutine to achieve parallelism. If you are familiar with Java, Goroutine can be thought as threads in GO for the sake of understanding, while actually they are different. Many Goroutines are actually multiplexed onto fewer OS threads. 
+Parallelism is about doing many things at once. While this sounds similar to concurrency but they are different.<br>
+GO provides Goroutine to achieve parallelism. If you are familiar with Java, Goroutine can be thought as threads in GO for the sake of understanding, while actually they are different. Many Goroutines are actually multiplexed onto fewer OS threads.<br> 
 
-This article is not about what Goroutines are and its workings. If you are not familiar with Goroutine yet, it is better to understand and try-out before proceeding further. 
-Though Goroutines are very straightforward to use by any developer, it could be prone to error for a naïve programmer if there is a need to expect return values  from Goroutine. 
+This article is not about what Goroutines are and its workings. If you are not familiar with Goroutine yet, it is better to understand and try-out before proceeding further.<br> 
+Though Goroutines are very straightforward to use by any developer, it could be prone to error for a naïve programmer if there is a need to expect return values  from Goroutine.<br> 
 
-Let's try to write a simple Goroutine that makes an HTTP call and return the result back. One way of doing this is, 
+Let's try to write a simple Goroutine that makes an HTTP call and return the result back. One way of doing this is,<br> 
 
-<i>var ( 
-       dollarValue in 
-       wg sync.WaitGroup 
-) 
+<i>var (<br> 
+       dollarValue in<br> 
+       wg sync.WaitGroup<br> 
+)<br> 
 
-wg.Add(1) 
+wg.Add(1)<br> 
 
-func getDollarValue ()  
+func getDollarValue ()<br>  
 {  
-    defer wg.Done() 
-	time.Sleep(30 * time.Millisecond) //simulates a blocking HTTP call to some exchange service 
-	dollarValue = 60 
+    defer wg.Done()<br> 
+	time.Sleep(30 * time.Millisecond) //simulates a blocking HTTP call to some exchange service<br> 
+	dollarValue = 60<br> 
 }  
 
 
-wg.Wait() 
-fmt.Printf("Todays conversion rate = %d", dollarValue)</i>
+wg.Wait()<br> 
+fmt.Printf("Todays conversion rate = %d", dollarValue)</i><br>
 
-Same can also be achieved by making use of Channels in GO. 
+Same can also be achieved by making use of Channels in GO.<br> 
 
-Now, imagine if you need to create many such Goroutines and you need some kind of coordination among them. This easily prone to errors.  
-Let's say you need to create a simple flow,  
-Generate a bill for the items in the cart (by making an HTTP call to some billing service) 
-Get the current dollar conversion rates (again by making an HTTP call to some exchange service) 
-Generate the bill amount in $ by combining the outputs of above 2 steps. 
+Now, imagine if you need to create many such Goroutines and you need some kind of coordination among them. This easily prone to errors.<br>  
+Let's say you need to create a simple flow,<br>  
+Generate a bill for the items in the cart (by making an HTTP call to some billing service)<br> 
+Get the current dollar conversion rates (again by making an HTTP call to some exchange service)<br> 
+Generate the bill amount in $ by combining the outputs of above 2 steps.<br> 
 
-The above steps can be easily achieved by writing Goroutines and coordinating using channels/waitgroup. 
-The above can be achieved in a very intuitive way, 
+The above steps can be easily achieved by writing Goroutines and coordinating using channels/waitgroup.<br> 
+The above can be achieved in a very intuitive way,<br> 
 
-<i>billFlow := NewFlow(getBillAmount). 
-			AndCall(getDollarValue). 
-			ThenCombine(generateBillAmountInDollar) 
+<i>billFlow := NewFlow(getBillAmount).<br> 
+			AndCall(getDollarValue).<br> 
+			ThenCombine(generateBillAmountInDollar)<br> 
 
-billFlow.Execute() 
+billFlow.Execute()<br> 
 
-billAmnt, err := billFlow.Get(0) 
+billAmnt, err := billFlow.Get(0)<br> 
 
-fmt.Printf("Bill Amount = %d", billAmnt)</i> 
+fmt.Printf("Bill Amount = %d", billAmnt)</i><br> 
 
-getBillAmount,  getDollarValue and generateBillAmountInDollar are all methods that return int. 
-GenerateBillAmountInDollar takes two int parameters.  
-All of these functions are executed separately by Goroutines. 
+getBillAmount,  getDollarValue and generateBillAmountInDollar are all methods that return int.<br> 
+GenerateBillAmountInDollar takes two int parameters.<br>  
+All of these functions are executed separately by Goroutines.<br> 
 
-Awesome! We generated the bill in $ by writing our code in a more intuitive way. The above code is more readable and easily maintainable. 
+Awesome! We generated the bill in $ by writing our code in a more intuitive way. The above code is more readable and easily maintainable.<br> 
 If you have come till here you should start exploring this utility @ https://github.com/kartiksirigeri/go-work-flow  
 
 </span> 
