@@ -1,17 +1,18 @@
 <html>
 <title>GO-WORK-FLOW</title>
 <body>
-<b>GO-WORK-FLOW</b>
+<b>GO-WORK-FLOW</b><br>
 <span>
-Parallelism is about doing many things at once. While this sounds similar to concurrency but they are different.<br>
-GO provides Goroutine to achieve parallelism. If you are familiar with Java, Goroutine can be thought as threads in GO for the sake of understanding, while actually they are different. Many Goroutines are actually multiplexed onto fewer OS threads.<br> 
+<br><p>Parallelism is about doing many things at once. While this sounds similar to concurrency but they are different.<br>
+GO provides Goroutine to achieve parallelism. If you are familiar with Java, Goroutine can be thought as threads in GO for the sake of understanding, while actually they are different.<br>
+Many Goroutines are actually multiplexed onto fewer OS threads.</p><br> 
 
-This article is not about what Goroutines are and its workings. If you are not familiar with Goroutine yet, it is better to understand and try-out before proceeding further.<br> 
+<br>This article is not about what Goroutines are and its workings. If you are not familiar with Goroutine yet, it is better to understand and try-out before proceeding further.<br> 
 Though Goroutines are very straightforward to use by any developer, it could be prone to error for a naïve programmer if there is a need to expect return values  from Goroutine.<br> 
 
-Let's try to write a simple Goroutine that makes an HTTP call and return the result back. One way of doing this is,<br> 
+<br>Let's try to write a simple Goroutine that makes an HTTP call and return the result back. One way of doing this is,<br> 
 
-<i>var (<br> 
+<br><i>var (<br> 
        dollarValue in<br> 
        wg sync.WaitGroup<br> 
 )<br> 
@@ -27,35 +28,32 @@ func getDollarValue ()<br>
 
 
 wg.Wait()<br> 
-fmt.Printf("Todays conversion rate = %d", dollarValue)</i><br>
+fmt.Printf("Todays conversion rate = %d", dollarValue)</i><br><br>
 
 Same can also be achieved by making use of Channels in GO.<br> 
-
-Now, imagine if you need to create many such Goroutines and you need some kind of coordination among them. This easily prone to errors.<br>  
+Now, imagine if you need to create many such Goroutines and you need some kind of coordination among them. This easily prone to errors.<br><br>  
 Let's say you need to create a simple flow,<br>  
-Generate a bill for the items in the cart (by making an HTTP call to some billing service)<br> 
-Get the current dollar conversion rates (again by making an HTTP call to some exchange service)<br> 
-Generate the bill amount in $ by combining the outputs of above 2 steps.<br> 
+1. Generate a bill for the items in the cart (by making an HTTP call to some billing service)<br> 
+2. Get the current dollar conversion rates (again by making an HTTP call to some exchange service)<br> 
+3. Generate the bill amount in $ by combining the outputs of above 2 steps.<br><br> 
 
 The above steps can be easily achieved by writing Goroutines and coordinating using channels/waitgroup.<br> 
-The above can be achieved in a very intuitive way,<br> 
+The above can be achieved in a very intuitive way,<br><br> 
 
 <i>billFlow := NewFlow(getBillAmount).<br> 
 			AndCall(getDollarValue).<br> 
 			ThenCombine(generateBillAmountInDollar)<br> 
 
 billFlow.Execute()<br> 
-
 billAmnt, err := billFlow.Get(0)<br> 
 
-fmt.Printf("Bill Amount = %d", billAmnt)</i><br> 
+fmt.Printf("Bill Amount = %d", billAmnt)</i><br><br> 
 
 getBillAmount,  getDollarValue and generateBillAmountInDollar are all methods that return int.<br> 
-GenerateBillAmountInDollar takes two int parameters.<br>  
-All of these functions are executed separately by Goroutines.<br> 
+GenerateBillAmountInDollar takes two int parameters.All of these functions are executed separately by Goroutines.<br><br> 
 
 Awesome! We generated the bill in $ by writing our code in a more intuitive way. The above code is more readable and easily maintainable.<br> 
-If you have come till here you should start exploring this utility @ https://github.com/kartiksirigeri/go-work-flow  
+If you have come till here you should start exploring this utility @ <a href="https://github.com/kartiksirigeri/go-work-flow">https://github.com/kartiksirigeri/go-work-flow</a>  
 
 </span> 
 </body>
