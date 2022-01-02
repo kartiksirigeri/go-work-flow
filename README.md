@@ -28,8 +28,8 @@ Example usage:
 
 	newExecutorService := NewExecutorService(10, 5)
 
-	billFlow.SetExecutor(newExecutorService).Execute()
-	if finalAmount, e := billFlow.Get(0); e != nil {
+	billFlow.SetExecutor(newExecutorService).Execute() // Execute() will submit for execution
+	if finalAmount, e := billFlow.Get(0); e != nil { //Get() will wait for all the methods completion or exit with timeout
 		fmt.Errorf("error (%s) while waiting to get the final bill amount", e.Error())
 	} else {
 		fmt.Println(finalAmount[0])
